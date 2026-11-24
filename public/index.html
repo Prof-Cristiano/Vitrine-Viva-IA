@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vitrine Viva IA</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="cabecalho">
+    <div class="container">
+      <p class="etiqueta">Aula prática de marketing digital</p>
+      <h1>Vitrine Viva IA</h1>
+      <p>Experimente criar uma campanha para um negócio fictício.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="cartao" aria-labelledby="caso-titulo">
+      <h2 id="caso-titulo">Caso da aula: Café Ipê</h2>
+      <p>Bolo de laranja vendido em fatias por <strong>R$ 12</strong>.</p>
+      <p>Oferta fictícia válida até domingo, enquanto houver disponibilidade.</p>
+      <p class="aviso">Esta é uma atividade demonstrativa. Revise todo conteúdo gerado antes de usá-lo.</p>
+    </section>
+
+    <section class="cartao" aria-labelledby="textos-titulo">
+      <h2 id="textos-titulo">Textos da campanha</h2>
+      <p>Gere uma sugestão de texto e copie para sua atividade.</p>
+      <div class="acoes">
+        <button id="gerar-texto" type="button">Gerar textos</button>
+        <button id="copiar-texto" type="button" class="secundario" disabled>Copiar texto</button>
+      </div>
+      <p id="status-texto" class="status" role="status" aria-live="polite"></p>
+      <div id="texto-campanha" class="resultado" hidden></div>
+    </section>
+
+    <section class="cartao" aria-labelledby="imagem-titulo">
+      <h2 id="imagem-titulo">Imagem da campanha</h2>
+      <p>Gere uma imagem ilustrativa e baixe para sua atividade.</p>
+      <div class="acoes">
+        <button id="gerar-imagem" type="button">Gerar imagem</button>
+        <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem</a>
+      </div>
+      <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
+      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem gerada para a campanha fictícia do Café Ipê" hidden>
+    </section>
+
+    <section class="cartao" aria-labelledby="previa-titulo">
+      <h2 id="previa-titulo">Prévia da landing page</h2>
+      <div class="previa">
+        <p class="etiqueta">Oferta fictícia • Café Ipê</p>
+        <h3 id="landing-titulo">Uma fatia de bolo de laranja para alegrar seu dia</h3>
+        <p id="landing-descricao">Experimente uma fatia por R$ 12. Oferta válida até domingo, enquanto houver disponibilidade.</p>
+        <button type="button" class="cta" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
+        <p id="cta-aviso" class="nota">Botão demonstrativo: não abre contatos nem páginas externas.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container rodape">Vitrine Viva IA • Projeto didático fictício</footer>
+</body>
+</html>
