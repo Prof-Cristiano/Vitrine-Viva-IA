@@ -6,6 +6,10 @@
     "dev": "wrangler pages dev public --ai AI"
   },
   "devDependencies": {
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.167.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261123.1": true
   }
 }

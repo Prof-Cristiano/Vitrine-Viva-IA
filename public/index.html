@@ -10,54 +10,138 @@
 <body>
   <header class="cabecalho">
     <div class="container">
-      <p class="etiqueta">Aula prática de marketing digital</p>
+      <p class="etiqueta">Atividade guiada de marketing digital</p>
       <h1>Vitrine Viva IA</h1>
-      <p>Experimente criar uma campanha para um negócio fictício.</p>
+      <p>Transforme um briefing em uma campanha pronta para revisar</p>
     </div>
   </header>
 
   <main class="container">
-    <section class="cartao" aria-labelledby="caso-titulo">
-      <h2 id="caso-titulo">Caso da aula: Café Ipê</h2>
-      <p>Bolo de laranja vendido em fatias por <strong>R$ 12</strong>.</p>
-      <p>Oferta fictícia válida até domingo, enquanto houver disponibilidade.</p>
-      <p class="aviso">Esta é uma atividade demonstrativa. Revise todo conteúdo gerado antes de usá-lo.</p>
-    </section>
+    <p class="aviso" role="note">A IA sugere; você confere os fatos antes de usar.</p>
 
-    <section class="cartao" aria-labelledby="textos-titulo">
-      <h2 id="textos-titulo">Textos da campanha</h2>
-      <p>Gere uma sugestão de texto e copie para sua atividade.</p>
-      <div class="acoes">
-        <button id="gerar-texto" type="button">Gerar textos</button>
-        <button id="copiar-texto" type="button" class="secundario" disabled>Copiar texto</button>
+    <div class="colunas">
+      <section class="cartao" aria-labelledby="briefing-titulo">
+        <div class="cabecalho-secao">
+          <div>
+            <p class="etiqueta">Etapa 1</p>
+            <h2 id="briefing-titulo">Conte sobre sua oferta</h2>
+          </div>
+          <button id="usar-exemplo" class="secundario" type="button">Usar exemplo Café Ipê</button>
+        </div>
+        <p class="texto-ajuda">Preencha os campos para orientar as sugestões. Não inclua dados pessoais.</p>
+
+        <form id="briefing-form">
+          <div class="campos">
+            <div class="campo">
+              <label for="estabelecimento">Nome do negócio</label>
+              <input id="estabelecimento" name="estabelecimento" type="text" maxlength="120" required>
+            </div>
+            <div class="campo">
+              <label for="produto">Produto ou serviço</label>
+              <input id="produto" name="produto" type="text" maxlength="160" required>
+            </div>
+            <div class="campo campo-largo">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" name="descricao" rows="2" maxlength="500" required></textarea>
+              <span class="texto-ajuda">Descreva apenas características que você conhece.</span>
+            </div>
+            <div class="campo">
+              <label for="preco">Preço</label>
+              <input id="preco" name="preco" type="text" maxlength="100" required>
+            </div>
+            <div class="campo">
+              <label for="validade">Validade ou período</label>
+              <input id="validade" name="validade" type="text" maxlength="200" required>
+            </div>
+            <div class="campo campo-largo">
+              <label for="publico">Público</label>
+              <input id="publico" name="publico" type="text" maxlength="200" required>
+            </div>
+            <div class="campo">
+              <label for="tom">Tom da comunicação</label>
+              <input id="tom" name="tom" type="text" maxlength="120" required>
+            </div>
+            <div class="campo campo-largo">
+              <label for="restricoes">Restrições ou informações que não devem ser afirmadas</label>
+              <textarea id="restricoes" name="restricoes" rows="2" maxlength="500"></textarea>
+            </div>
+          </div>
+
+          <div class="acoes acoes-formulario">
+            <button id="gerar-texto" type="submit">Gerar textos</button>
+          </div>
+        </form>
+        <p id="status-texto" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="cartao previa-cartao" aria-labelledby="previa-titulo">
+        <p class="etiqueta">Prévia</p>
+        <h2 id="previa-titulo">Sua landing page</h2>
+        <div class="previa">
+          <p id="landing-estabelecimento" class="nome-negocio">Nome do negócio</p>
+          <h3 id="landing-produto">Produto ou serviço</h3>
+          <p id="landing-descricao" class="texto-descricao">A descrição informada aparecerá aqui.</p>
+          <div class="oferta">
+            <p class="rotulo-oferta">Oferta do briefing</p>
+            <p id="landing-oferta">Preço e validade informados aparecerão aqui.</p>
+          </div>
+          <p id="landing-texto" class="texto-landing">O resumo gerado para a landing page aparecerá aqui.</p>
+          <button id="cta-demonstrativo" type="button" class="cta" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
+          <p id="cta-aviso" class="nota">CTA demonstrativo: não abre links nem envia seus dados.</p>
+          <p id="status-cta" class="status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </div>
+
+    <section id="resultados" class="cartao" aria-labelledby="resultados-titulo" hidden>
+      <p class="etiqueta">Etapa 2</p>
+      <h2 id="resultados-titulo">Sugestões da campanha</h2>
+      <p class="texto-ajuda">Revise os fatos antes de copiar ou usar qualquer sugestão.</p>
+      <div class="resultados-grid">
+        <article class="resultado-item">
+          <h3>Conceito</h3>
+          <p id="resultado-concept" class="texto-resultado"></p>
+          <button class="secundario copiar" type="button" data-copy-id="resultado-concept">Copiar</button>
+        </article>
+        <article class="resultado-item">
+          <h3>Chamada principal</h3>
+          <p id="resultado-headline" class="texto-resultado"></p>
+          <button class="secundario copiar" type="button" data-copy-id="resultado-headline">Copiar</button>
+        </article>
+        <article class="resultado-item">
+          <h3>Legenda social</h3>
+          <p id="resultado-caption" class="texto-resultado"></p>
+          <button class="secundario copiar" type="button" data-copy-id="resultado-caption">Copiar</button>
+        </article>
+        <article class="resultado-item">
+          <h3>Texto para story</h3>
+          <p id="resultado-story" class="texto-resultado"></p>
+          <button class="secundario copiar" type="button" data-copy-id="resultado-story">Copiar</button>
+        </article>
+        <article class="resultado-item resultado-largo">
+          <h3>Resumo para landing page</h3>
+          <p id="resultado-landing" class="texto-resultado"></p>
+          <button class="secundario copiar" type="button" data-copy-id="resultado-landing">Copiar</button>
+        </article>
       </div>
-      <p id="status-texto" class="status" role="status" aria-live="polite"></p>
-      <div id="texto-campanha" class="resultado" hidden></div>
+      <p id="status-copia" class="status" role="status" aria-live="polite"></p>
     </section>
 
     <section class="cartao" aria-labelledby="imagem-titulo">
+      <p class="etiqueta">Etapa 3</p>
       <h2 id="imagem-titulo">Imagem da campanha</h2>
-      <p>Gere uma imagem ilustrativa e baixe para sua atividade.</p>
+      <p class="texto-ajuda">Gere uma imagem a partir da descrição visual criada para a campanha.</p>
       <div class="acoes">
-        <button id="gerar-imagem" type="button">Gerar imagem</button>
+        <button id="gerar-imagem" type="button" disabled>Gerar imagem</button>
         <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem</a>
       </div>
       <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
-      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem gerada para a campanha fictícia do Café Ipê" hidden>
-    </section>
-
-    <section class="cartao" aria-labelledby="previa-titulo">
-      <h2 id="previa-titulo">Prévia da landing page</h2>
-      <div class="previa">
-        <p class="etiqueta">Oferta fictícia • Café Ipê</p>
-        <h3 id="landing-titulo">Uma fatia de bolo de laranja para alegrar seu dia</h3>
-        <p id="landing-descricao">Experimente uma fatia por R$ 12. Oferta válida até domingo, enquanto houver disponibilidade.</p>
-        <button type="button" class="cta" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
-        <p id="cta-aviso" class="nota">Botão demonstrativo: não abre contatos nem páginas externas.</p>
-      </div>
+      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem gerada para a campanha" hidden>
     </section>
   </main>
 
-  <footer class="container rodape">Vitrine Viva IA • Projeto didático fictício</footer>
+  <footer class="rodape">
+    <div class="container">Projeto didático. O Café Ipê e a oferta são fictícios. Revise todos os dados antes de usar qualquer conteúdo.</div>
+  </footer>
 </body>
 </html>
