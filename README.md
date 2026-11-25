@@ -4,34 +4,32 @@ Projeto didático de marketing digital para um aluno iniciante. O caso é fictí
 
 ## Situação inicial
 
-A interface e a prévia da landing page estão prontas para servir de base. A geração de textos e imagens **ainda não está implementada**: os botões mostram uma mensagem explicativa. Não há publicação ou agendamento de conteúdo.
+A interface gera textos e uma imagem para o caso fictício e atualiza a prévia da landing page. Gere os textos primeiro para obter a descrição visual usada na imagem. Não há publicação ou agendamento de conteúdo.
 
-Os modelos devem ser escolhidos no [catálogo do Workers AI](https://developers.cloudflare.com/workers-ai/models/). Antes de implementar cada chamada, confira na documentação atual do modelo seu ID, disponibilidade, preço, entradas, saídas e limites. Os formatos e IDs não foram presumidos.
+Os modelos configurados são [GLM-4.7-Flash](https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/) para texto e [FLUX.1 schnell](https://developers.cloudflare.com/workers-ai/models/flux-1-schnell/) para imagem. Confira disponibilidade, preço e limites antes de usá-los.
 
 ## Estrutura
 
 - `public/`: página, estilos e JavaScript do navegador, sem framework ou build.
 - `functions/api/`: endpoints `POST /api/generate-text` e `POST /api/generate-image`.
 - `.dev.vars.example`: nomes das variáveis para configuração local.
-- `.github/copilot-instructions.md`: orientações do projeto para o Copilot.
 
 ## Desenvolvimento local
 
 Quando for executar o projeto:
 
 1. Instale Node.js e npm. Na raiz do projeto, execute `npm install`.
-2. Copie `.dev.vars.example` para `.dev.vars` e substitua os exemplos pelos IDs dos modelos escolhidos. Não coloque tokens no arquivo nem no navegador.
+2. Copie `.dev.vars.example` para `.dev.vars` e configure `TEXT_MODEL` como `@cf/zai-org/glm-4.7-flash` e `IMAGE_MODEL` como `@cf/black-forest-labs/flux-1-schnell`. Não coloque tokens no arquivo nem no navegador.
 3. Autentique o Wrangler com `npx wrangler login`.
 4. Execute `npm run dev` e abra `http://localhost:8788`.
 
-O comando serve `public/`, encontra `functions/` na raiz e disponibiliza o binding `AI`. O Workers AI usa a conta Cloudflare mesmo durante testes locais e pode gerar custos. Nesta estrutura inicial, os endpoints ainda não chamam nenhum modelo.
+O comando serve `public/`, encontra `functions/` na raiz e disponibiliza o binding `AI`. O Workers AI usa a conta Cloudflare mesmo durante testes locais e pode gerar custos.
 
-## Próximos passos para a geração
+## Fluxo de geração
 
-1. Implementar cada Function com `context.env.AI` e o ID configurado em `context.env.TEXT_MODEL` ou `context.env.IMAGE_MODEL`.
-2. Validar o pedido, adaptar a entrada e interpretar a saída conforme a documentação do modelo escolhido. Responder com erros claros em caso de falha.
-3. A Function de texto deve retornar JSON com `campaignText`, `landingTitle` e `landingDescription`, todos textos não vazios. A Function de imagem deve retornar os bytes da imagem com `Content-Type` apropriado. Esses são contratos da aplicação, não formatos presumidos dos modelos.
-4. Verificar os dados da oferta, o botão demonstrativo, a cópia e o download, incluindo falhas de configuração e geração.
+1. A página envia os dados da oferta à Function de texto, que retorna `concept`, `headline`, `caption`, `story`, `landingText` e `visualPrompt`.
+2. A chamada principal e o resumo atualizam a prévia. Os textos podem ser copiados após revisão.
+3. A página envia `visualPrompt` como `prompt` à Function de imagem e oferece o JPEG para download. Ao gerar novos textos, a imagem anterior é removida.
 
 ## Cloudflare Pages
 
