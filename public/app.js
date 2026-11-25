@@ -34,6 +34,7 @@ const areaResultados = $("#resultados");
 const campoPrompt = $("#prompt-visual");
 const botaoRestaurar = $("#restaurar-prompt");
 const erroPrompt = $("#prompt-erro");
+const estudio = criarEstudio();
 
 let promptSugerido = "";
 let enderecoImagem = "";
@@ -163,6 +164,7 @@ async function montarCriativo() {
 }
 
 function limparImagem() {
+  estudio.limparImagem();
   if (enderecoImagem) URL.revokeObjectURL(enderecoImagem);
   enderecoImagem = "";
   imagemOriginal = null;
@@ -259,6 +261,7 @@ formulario.addEventListener("submit", async (evento) => {
     mostrarResultados(resultado);
     mostrarPrevia(briefing, resultado);
     mostrarDirecao(briefing, resultado.visualPrompt);
+    estudio.definirTextos(briefing, resultado);
     limparImagem();
     definirStatus(statusImagem, "Textos prontos. Agora você pode gerar a imagem.");
     definirStatus(statusTexto, "Textos gerados. Confira os fatos antes de usar.", "sucesso");
@@ -301,6 +304,14 @@ botaoImagem.addEventListener("click", async () => {
     limparImagem();
     imagemOriginal = arquivo;
     await montarCriativo();
+    const enderecoOriginal = URL.createObjectURL(arquivo);
+    try {
+      estudio.definirImagem(await carregarImagem(enderecoOriginal));
+    } catch {
+      estudio.informarErro();
+    } finally {
+      URL.revokeObjectURL(enderecoOriginal);
+    }
     definirStatus(statusImagem, "Imagem gerada por IA e preparada em 1:1 com marca d'água. Confira se combina com a oferta antes de baixar.", "sucesso");
     marcarEtapa(4, [1, 2, 3]);
   } catch (erro) {

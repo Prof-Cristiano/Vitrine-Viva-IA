@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vitrine Viva IA</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="studio.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -194,6 +195,62 @@
       <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
       <div id="quadro-imagem" class="quadro" hidden>
         <img id="imagem-campanha" class="imagem-campanha" alt="Criativo quadrado 1:1 da campanha, gerado por IA, com marca d'água" hidden>
+      </div>
+    </section>
+
+    <section class="cartao" aria-labelledby="estudio-titulo">
+      <h2 id="estudio-titulo">Estúdio de composição</h2>
+      <p class="intro">Crie um folder promocional com a imagem gerada e textos revisados. A edição e o download acontecem no navegador.</p>
+      <p id="estudio-vazio" class="vazio">Gere os textos e a imagem para começar a compor.</p>
+      <div id="estudio" hidden>
+        <p class="dica">Os tamanhos são de trabalho, não especificações oficiais das redes. As edições ficam nesta página até você recarregá-la.</p>
+        <div class="estudio-grade">
+          <div class="estudio-controles">
+            <label for="estudio-formato">Formato
+              <select id="estudio-formato">
+                <option value="post">Folder / post quadrado</option>
+                <option value="avatar">Avatar</option>
+                <option value="capa">Capa</option>
+                <option value="story">Story vertical</option>
+                <option value="poster">Pôster digital</option>
+                <option value="flyer">Flyer digital</option>
+              </select>
+            </label>
+            <p id="estudio-dimensoes" class="dica"></p>
+            <label for="estudio-negocio">Nome do negócio
+              <input id="estudio-negocio" type="text" maxlength="200">
+            </label>
+            <label for="estudio-chamada">Chamada principal
+              <textarea id="estudio-chamada" rows="2" maxlength="300"></textarea>
+            </label>
+            <label for="estudio-texto">Texto de apoio
+              <textarea id="estudio-texto" rows="3" maxlength="500"></textarea>
+            </label>
+            <label for="estudio-paleta">Paleta
+              <select id="estudio-paleta">
+                <option value="terracota">Terracota e creme</option>
+                <option value="verde">Verde e creme</option>
+                <option value="azul">Azul e branco</option>
+              </select>
+            </label>
+            <label for="estudio-zoom">Ampliação da imagem <output id="estudio-zoom-valor" for="estudio-zoom"></output>
+              <input id="estudio-zoom" type="range" min="100" max="200" step="1">
+            </label>
+            <label for="estudio-x">Posição horizontal da imagem <output id="estudio-x-valor" for="estudio-x"></output>
+              <input id="estudio-x" type="range" min="0" max="100" step="1">
+            </label>
+            <label for="estudio-y">Posição vertical da imagem <output id="estudio-y-valor" for="estudio-y"></output>
+              <input id="estudio-y" type="range" min="0" max="100" step="1">
+            </label>
+          </div>
+          <div class="estudio-visual">
+            <h3>Prévia e recorte</h3>
+            <p class="dica">Arraste a fotografia ou use os controles para ajustar o recorte. A faixa da marca fica fora da fotografia.</p>
+            <canvas id="estudio-previa" role="img" aria-label="Prévia da composição promocional; os textos e controles estão disponíveis ao lado."></canvas>
+            <p id="estudio-status" class="status" role="status" aria-live="polite"></p>
+            <button id="estudio-baixar" type="button" class="primario">Baixar composição em PNG</button>
+          </div>
+        </div>
       </div>
     </section>
 

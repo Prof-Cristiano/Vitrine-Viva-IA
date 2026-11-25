@@ -223,7 +223,7 @@ label {
   font-weight: 400;
 }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   margin-top: 0.25rem;
   padding: 0.7rem 0.8rem;
@@ -235,7 +235,7 @@ input, textarea {
   font-weight: 400;
 }
 
-input:hover, textarea:hover { border-color: var(--cafe-suave); }
+input:hover, textarea:hover, select:hover { border-color: var(--cafe-suave); }
 textarea { resize: vertical; }
 
 /* Botões */
@@ -286,7 +286,7 @@ button:disabled {
 
 button[aria-busy="true"] { cursor: progress; }
 
-:is(a, button, input, textarea):focus-visible {
+:is(a, button, input, textarea, select):focus-visible {
   outline: 3px solid #1f5fbf;
   outline-offset: 2px;
 }
@@ -436,6 +436,32 @@ button[aria-busy="true"] { cursor: progress; }
   object-fit: cover;
 }
 
+/* Estúdio */
+.estudio-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.estudio-controles { display: grid; align-content: start; gap: 0.9rem; }
+.estudio-controles .dica { margin: -0.5rem 0 0; }
+.estudio-controles input[type="range"] { padding: 0; accent-color: var(--terracota); }
+.estudio-visual { min-width: 0; }
+.estudio-visual h3 { font-size: 1.1rem; }
+.estudio-visual .dica { margin: 0.4rem 0 0.8rem; }
+#estudio-previa {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--linha);
+  border-radius: 0.5rem;
+  background: #fff;
+  touch-action: none;
+  cursor: grab;
+}
+#estudio-previa:active { cursor: grabbing; }
+#estudio-baixar { margin-top: 1rem; }
+
 /* Prévia da landing page */
 .previa {
   overflow: hidden;
@@ -567,7 +593,7 @@ button[aria-busy="true"] { cursor: progress; }
   :root { font-size: 16.5px; }
   .cartao { padding: 1.15rem; }
   fieldset { padding: 0.8rem 0.85rem 1rem; }
-  .grade, .resultados, .direcao-lista { grid-template-columns: 1fr; }
+  .grade, .resultados, .direcao-lista, .estudio-grade { grid-template-columns: 1fr; }
   .direcao-arte { padding: 1rem; }
   .resultado.destaque { grid-column: auto; }
   .acoes > button, .acoes > .botao { width: 100%; }
@@ -575,6 +601,7 @@ button[aria-busy="true"] { cursor: progress; }
   .trilha ol { grid-template-columns: repeat(2, 1fr); }
   .previa-corpo { padding: 1.2rem 1.1rem; }
   .previa .cta { width: 100%; }
+  #estudio-baixar { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
