@@ -8,52 +8,91 @@
   <script src="app.js" defer></script>
 </head>
 <body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
   <header class="cabecalho">
     <div class="container">
-      <p class="etiqueta">Atividade guiada de marketing digital</p>
-      <h1>Vitrine Viva IA</h1>
+      <div class="marca-linha">
+        <p class="marca">Vitrine Viva IA</p>
+        <span class="selo">Campanha demonstrativa</span>
+      </div>
+      <h1>Do briefing à campanha, em quatro passos</h1>
       <p class="subtitulo">Transforme um briefing em uma campanha pronta para revisar</p>
-      <p class="aviso-ia" role="note">A IA sugere; você confere os fatos antes de usar</p>
+      <p class="aviso-ia" role="note"><span aria-hidden="true">✓</span> A IA sugere; você confere os fatos antes de usar</p>
     </div>
   </header>
 
-  <main class="container">
+  <nav class="container trilha" aria-label="Etapas da atividade">
+    <ol>
+      <li id="trilha-1" data-estado="atual"><span class="num">1</span> Briefing</li>
+      <li id="trilha-2"><span class="num">2</span> Textos</li>
+      <li id="trilha-3"><span class="num">3</span> Imagem</li>
+      <li id="trilha-4"><span class="num">4</span> Prévia</li>
+    </ol>
+  </nav>
+
+  <main id="conteudo" class="container">
     <section class="cartao" aria-labelledby="briefing-titulo">
       <h2 id="briefing-titulo"><span class="passo">1</span> Conte sobre a oferta</h2>
-      <p>Preencha o briefing ou use o exemplo. Campos com * são obrigatórios.</p>
+      <p class="intro">Quanto mais claro o briefing, melhores as sugestões. Campos com * são obrigatórios.</p>
       <form id="formulario" novalidate>
         <div class="acoes">
           <button id="usar-exemplo" type="button" class="secundario">Usar exemplo Café Ipê</button>
         </div>
-        <div class="grade">
-          <label>Nome do negócio *
-            <input id="estabelecimento" name="estabelecimento" type="text" maxlength="200" required autocomplete="off">
-          </label>
-          <label>Produto *
-            <input id="produto" name="produto" type="text" maxlength="200" required autocomplete="off">
-          </label>
-          <label class="larga">Descrição do produto
-            <textarea id="descricao" name="descricao" rows="3" maxlength="2000"></textarea>
-          </label>
-          <label>Preço
-            <input id="preco" name="preco" type="text" maxlength="200" autocomplete="off">
-          </label>
-          <label>Validade
-            <input id="validade" name="validade" type="text" maxlength="500" autocomplete="off">
-          </label>
-          <label class="larga">Público
-            <input id="publico" name="publico" type="text" maxlength="500" autocomplete="off">
-          </label>
-          <label>Tom de voz
-            <input id="tom" name="tom" type="text" maxlength="200" autocomplete="off">
-          </label>
-          <label class="larga">Restrições (o que a IA não deve afirmar)
-            <textarea id="restricoes" name="restricoes" rows="2" maxlength="2000"></textarea>
-          </label>
-        </div>
+
+        <fieldset>
+          <legend>Sobre o negócio e o produto</legend>
+          <div class="grade">
+            <label for="estabelecimento">Nome do negócio *
+              <span class="dica">Como seus clientes conhecem você.</span>
+              <input id="estabelecimento" name="estabelecimento" type="text" maxlength="200" required autocomplete="off">
+            </label>
+            <label for="produto">Produto *
+              <span class="dica">O que você quer divulgar.</span>
+              <input id="produto" name="produto" type="text" maxlength="200" required autocomplete="off">
+            </label>
+            <label class="larga" for="descricao">Descrição do produto
+              <span class="dica">Só o que é verdade: como é feito, como é vendido.</span>
+              <textarea id="descricao" name="descricao" rows="3" maxlength="2000"></textarea>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Oferta</legend>
+          <div class="grade">
+            <label for="preco">Preço
+              <span class="dica">Exemplo: R$ 12 por fatia.</span>
+              <input id="preco" name="preco" type="text" maxlength="200" autocomplete="off">
+            </label>
+            <label for="validade">Validade
+              <span class="dica">Até quando vale e se há limite.</span>
+              <input id="validade" name="validade" type="text" maxlength="500" autocomplete="off">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Comunicação</legend>
+          <div class="grade">
+            <label class="larga" for="publico">Público
+              <span class="dica">Para quem a campanha fala.</span>
+              <input id="publico" name="publico" type="text" maxlength="500" autocomplete="off">
+            </label>
+            <label for="tom">Tom de voz
+              <span class="dica">Como o texto deve soar.</span>
+              <input id="tom" name="tom" type="text" maxlength="200" autocomplete="off">
+            </label>
+            <label class="larga" for="restricoes">Restrições (o que a IA não deve afirmar)
+              <span class="dica">Promessas ou informações que não podem aparecer.</span>
+              <textarea id="restricoes" name="restricoes" rows="2" maxlength="2000"></textarea>
+            </label>
+          </div>
+        </fieldset>
+
         <p id="erro-formulario" class="erro" role="alert" hidden></p>
         <div class="acoes">
-          <button id="gerar-texto" type="submit">Gerar textos da campanha</button>
+          <button id="gerar-texto" type="submit" class="primario">Gerar textos da campanha</button>
         </div>
         <p id="status-texto" class="status" role="status" aria-live="polite"></p>
       </form>
@@ -61,15 +100,15 @@
 
     <section class="cartao" aria-labelledby="resultados-titulo">
       <h2 id="resultados-titulo"><span class="passo">2</span> Textos sugeridos</h2>
-      <p id="resultados-vazio" class="nota">Os textos aparecerão aqui depois que você gerar a campanha.</p>
+      <p id="resultados-vazio" class="vazio">Os textos aparecerão aqui depois que você gerar a campanha.</p>
       <div id="resultados" class="resultados" hidden>
-        <article class="resultado" data-campo="concept">
-          <h3>Conceito da campanha</h3>
+        <article class="resultado destaque" data-campo="headline">
+          <h3>Chamada principal</h3>
           <p class="texto"></p>
           <button type="button" class="secundario copiar">Copiar</button>
         </article>
-        <article class="resultado" data-campo="headline">
-          <h3>Chamada principal</h3>
+        <article class="resultado" data-campo="concept">
+          <h3>Conceito da campanha</h3>
           <p class="texto"></p>
           <button type="button" class="secundario copiar">Copiar</button>
         </article>
@@ -94,9 +133,9 @@
 
     <section class="cartao" aria-labelledby="imagem-titulo">
       <h2 id="imagem-titulo"><span class="passo">3</span> Imagem ilustrativa</h2>
-      <p>Depois de gerar os textos, crie uma imagem a partir da descrição visual sugerida.</p>
+      <p class="intro">Depois de gerar os textos, crie uma imagem a partir da descrição visual sugerida.</p>
       <div class="acoes">
-        <button id="gerar-imagem" type="button" disabled>Gerar imagem</button>
+        <button id="gerar-imagem" type="button" class="primario" disabled>Gerar imagem</button>
         <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem</a>
       </div>
       <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
@@ -105,14 +144,26 @@
 
     <section class="cartao" aria-labelledby="previa-titulo">
       <h2 id="previa-titulo"><span class="passo">4</span> Prévia da landing page</h2>
-      <div class="previa">
-        <p class="etiqueta" id="previa-negocio">Oferta fictícia</p>
-        <h3 id="previa-produto">Seu produto aparecerá aqui</h3>
-        <p class="oferta" id="previa-oferta" hidden></p>
-        <h4 id="previa-chamada" hidden></h4>
-        <p id="previa-texto">Gere os textos para ver a prévia.</p>
-        <button type="button" class="cta" id="cta-demo" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
-        <p id="cta-aviso" class="nota">Botão demonstrativo: não abre contatos nem páginas externas.</p>
+      <p class="intro">Uma simulação de como a oferta poderia aparecer em uma página.</p>
+      <div class="previa" role="group" aria-label="Prévia da landing page (demonstração)">
+        <p class="faixa">Oferta demonstrativa</p>
+        <div class="previa-corpo">
+          <p class="previa-negocio" id="previa-negocio">Nome do seu negócio</p>
+          <h3 id="previa-produto">Seu produto aparecerá aqui</h3>
+          <div class="previa-midia">
+            <img id="previa-imagem" alt="Imagem ilustrativa gerada por IA para a campanha" hidden>
+            <p id="previa-imagem-vazio" class="espaco-imagem">Espaço da imagem da campanha. Gere a imagem no passo 3 para vê-la aqui.</p>
+          </div>
+          <h4 id="previa-chamada" hidden></h4>
+          <p id="previa-texto" class="previa-descricao">Gere os textos para ver a prévia.</p>
+          <div id="previa-oferta" class="bloco-oferta" hidden>
+            <p class="oferta-item" id="previa-preco-bloco" hidden><span class="oferta-rotulo">Preço</span><strong id="previa-preco"></strong></p>
+            <p class="oferta-item" id="previa-validade-bloco" hidden><span class="oferta-rotulo">Validade</span><strong id="previa-validade"></strong></p>
+          </div>
+          <button type="button" class="cta" id="cta-demo" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
+          <p id="cta-aviso" class="nota">Ação demonstrativa: não abre contato nem envia dados.</p>
+        </div>
+        <p class="previa-rodape">Demonstração didática. O Café Ipê e a oferta são fictícios.</p>
       </div>
     </section>
   </main>

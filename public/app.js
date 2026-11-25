@@ -28,6 +28,21 @@ let promptVisual = "";
 let enderecoImagem = "";
 let ocupado = false;
 
+function definirStatus(elemento, texto, estado) {
+  elemento.textContent = texto;
+  if (estado) elemento.dataset.estado = estado;
+  else delete elemento.dataset.estado;
+}
+
+function marcarEtapa(atual, feitas) {
+  for (let n = 1; n <= 4; n++) {
+    const item = $(`#trilha-${n}`);
+    if (n === atual) item.dataset.estado = "atual";
+    else if (feitas.includes(n)) item.dataset.estado = "feito";
+    else delete item.dataset.estado;
+  }
+}
+
 function atualizarBotoes() {
   botaoTexto.disabled = ocupado;
   botaoExemplo.disabled = ocupado;
@@ -51,6 +66,10 @@ function limparImagem() {
   imagem.hidden = true;
   linkDownload.removeAttribute("href");
   linkDownload.hidden = true;
+  const imagemPrevia = $("#previa-imagem");
+  imagemPrevia.removeAttribute("src");
+  imagemPrevia.hidden = true;
+  $("#previa-imagem-vazio").hidden = false;
 }
 
 async function enviar(url, dados) {
@@ -78,12 +97,13 @@ async function enviar(url, dados) {
 }
 
 function mostrarPrevia(briefing, resultado) {
-  $("#previa-negocio").textContent = `Oferta fictícia • ${briefing.estabelecimento}`;
+  $("#previa-negocio").textContent = briefing.estabelecimento;
   $("#previa-produto").textContent = briefing.produto;
-  const oferta = [briefing.preco, briefing.validade].filter(Boolean).join(" • ");
-  const elementoOferta = $("#previa-oferta");
-  elementoOferta.textContent = oferta ? `Oferta confirmada no briefing: ${oferta}` : "";
-  elementoOferta.hidden = !oferta;
+  for (const [campo, id] of [["preco", "preco"], ["validade", "validade"]]) {
+    $(`#previa-${id}`).textContent = briefing[campo] || "";
+    $(`#previa-${id}-bloco`).hidden = !briefing[campo];
+  }
+  $("#previa-oferta").hidden = !briefing.preco && !briefing.validade;
   const chamada = $("#previa-chamada");
   chamada.textContent = resultado.headline;
   chamada.hidden = false;
@@ -110,8 +130,8 @@ formulario.addEventListener("submit", async (evento) => {
 
   ocupado = true;
   atualizarBotoes();
-  statusCopia.textContent = "";
-  statusTexto.textContent = "Gerando textos... isso pode levar alguns segundos.";
+  definirStatus(statusCopia, "");
+  definirStatus(statusTexto, "Gerando textos... isso pode levar alguns segundos.", "carregando");
   try {
     const resposta = await enviar("/api/generate-text", briefing);
     const resultado = await resposta.json();
@@ -123,10 +143,11 @@ formulario.addEventListener("submit", async (evento) => {
     mostrarPrevia(briefing, resultado);
     promptVisual = resultado.visualPrompt;
     limparImagem();
-    statusImagem.textContent = "Textos prontos. Agora você pode gerar a imagem.";
-    statusTexto.textContent = "Textos gerados. Confira os fatos antes de usar.";
+    definirStatus(statusImagem, "Textos prontos. Agora você pode gerar a imagem.");
+    definirStatus(statusTexto, "Textos gerados. Confira os fatos antes de usar.", "sucesso");
+    marcarEtapa(3, [1, 2, 4]);
   } catch (erro) {
-    statusTexto.textContent = `Não foi possível gerar os textos: ${erro.message}`;
+    definirStatus(statusTexto, `Não foi possível gerar os textos: ${erro.message}`, "erro");
   } finally {
     ocupado = false;
     atualizarBotoes();
@@ -136,14 +157,14 @@ formulario.addEventListener("submit", async (evento) => {
 botaoExemplo.addEventListener("click", () => {
   for (const campo of CAMPOS) formulario.elements[campo].value = EXEMPLO[campo];
   erroFormulario.hidden = true;
-  statusTexto.textContent = "Exemplo preenchido. Você pode editar os campos antes de gerar.";
+  definirStatus(statusTexto, "Exemplo preenchido. Você pode editar os campos antes de gerar.", "sucesso");
 });
 
 botaoImagem.addEventListener("click", async () => {
   if (!promptVisual) return;
   ocupado = true;
   atualizarBotoes();
-  statusImagem.textContent = "Gerando imagem... isso pode levar alguns segundos.";
+  definirStatus(statusImagem, "Gerando imagem... isso pode levar alguns segundos.", "carregando");
   try {
     const resposta = await enviar("/api/generate-image", { prompt: promptVisual });
     const arquivo = await resposta.blob();
@@ -154,12 +175,16 @@ botaoImagem.addEventListener("click", async () => {
     enderecoImagem = URL.createObjectURL(arquivo);
     imagem.src = enderecoImagem;
     imagem.hidden = false;
+    $("#previa-imagem").src = enderecoImagem;
+    $("#previa-imagem").hidden = false;
+    $("#previa-imagem-vazio").hidden = true;
     linkDownload.href = enderecoImagem;
     linkDownload.download = "vitrine-viva-ia.jpg";
     linkDownload.hidden = false;
-    statusImagem.textContent = "Imagem gerada por IA. Confira se combina com a oferta antes de baixar.";
+    definirStatus(statusImagem, "Imagem gerada por IA. Confira se combina com a oferta antes de baixar.", "sucesso");
+    marcarEtapa(4, [1, 2, 3]);
   } catch (erro) {
-    statusImagem.textContent = `Não foi possível gerar a imagem: ${erro.message}`;
+    definirStatus(statusImagem, `Não foi possível gerar a imagem: ${erro.message}`, "erro");
   } finally {
     ocupado = false;
     atualizarBotoes();
@@ -173,9 +198,9 @@ areaResultados.addEventListener("click", async (evento) => {
   const titulo = cartao.querySelector("h3").textContent;
   try {
     await navigator.clipboard.writeText(cartao.querySelector(".texto").textContent);
-    statusCopia.textContent = `Copiado: ${titulo}.`;
+    definirStatus(statusCopia, `Copiado: ${titulo}.`, "sucesso");
   } catch {
-    statusCopia.textContent = "Não foi possível copiar automaticamente. Selecione o texto e copie manualmente.";
+    definirStatus(statusCopia, "Não foi possível copiar automaticamente. Selecione o texto e copie manualmente.", "erro");
   }
 });
 
