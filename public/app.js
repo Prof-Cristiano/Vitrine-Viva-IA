@@ -26,6 +26,9 @@ const areaResultados = $("#resultados");
 
 let promptVisual = "";
 let enderecoImagem = "";
+let imagemOriginal = null;
+const LADO_CRIATIVO = 1080;
+const botaoReajustar = $("#reajustar-imagem");
 let ocupado = false;
 
 function definirStatus(elemento, texto, estado) {
@@ -47,6 +50,7 @@ function atualizarBotoes() {
   botaoTexto.disabled = ocupado;
   botaoExemplo.disabled = ocupado;
   botaoImagem.disabled = ocupado || !promptVisual;
+  botaoReajustar.disabled = ocupado;
   botaoTexto.setAttribute("aria-busy", String(ocupado));
 }
 
@@ -59,9 +63,88 @@ function lerBriefing() {
   return dados;
 }
 
+function carregarImagem(endereco) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => (img.naturalWidth > 0 && img.naturalHeight > 0 ? resolve(img) : reject(new Error()));
+    img.onerror = () => reject(new Error());
+    img.src = endereco;
+  });
+}
+
+// Recorta o centro em 1:1, exporta 1080x1080 e desenha a marca d'água no navegador.
+async function criarCriativo(original) {
+  const url = URL.createObjectURL(original);
+  try {
+    let img;
+    try {
+      img = await carregarImagem(url);
+    } catch {
+      throw new Error("A imagem não carregou corretamente. Gere a imagem de novo.");
+    }
+    try {
+      const lado = Math.min(img.naturalWidth, img.naturalHeight);
+      const tela = document.createElement("canvas");
+      tela.width = LADO_CRIATIVO;
+      tela.height = LADO_CRIATIVO;
+      const ctx = tela.getContext("2d");
+      if (!ctx) throw new Error("sem canvas");
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, (img.naturalWidth - lado) / 2, (img.naturalHeight - lado) / 2, lado, lado,
+        0, 0, LADO_CRIATIVO, LADO_CRIATIVO);
+
+      const faixa = ctx.createLinearGradient(0, LADO_CRIATIVO - 220, 0, LADO_CRIATIVO);
+      faixa.addColorStop(0, "rgba(0, 0, 0, 0)");
+      faixa.addColorStop(1, "rgba(0, 0, 0, 0.6)");
+      ctx.fillStyle = faixa;
+      ctx.fillRect(0, LADO_CRIATIVO - 220, LADO_CRIATIVO, 220);
+
+      const margem = 48;
+      const fonte = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+      ctx.textAlign = "right";
+      ctx.textBaseline = "alphabetic";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+      ctx.shadowBlur = 6;
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `700 40px ${fonte}`;
+      ctx.fillText("Vitrine Viva IA", LADO_CRIATIVO - margem, LADO_CRIATIVO - margem - 36);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+      ctx.font = `400 28px ${fonte}`;
+      ctx.fillText("imagem criada com IA", LADO_CRIATIVO - margem, LADO_CRIATIVO - margem);
+
+      const final = await new Promise((resolve) => tela.toBlob(resolve, "image/jpeg", 0.92));
+      if (!final || final.size === 0) throw new Error("sem exportação");
+      return final;
+    } catch {
+      throw new Error("Não foi possível preparar o criativo quadrado neste navegador. Tente de novo ou use outro navegador.");
+    }
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function montarCriativo() {
+  const final = await criarCriativo(imagemOriginal);
+  if (enderecoImagem) URL.revokeObjectURL(enderecoImagem);
+  enderecoImagem = URL.createObjectURL(final);
+  imagem.src = enderecoImagem;
+  imagem.hidden = false;
+  $("#quadro-imagem").hidden = false;
+  $("#previa-imagem").src = enderecoImagem;
+  $("#previa-imagem").hidden = false;
+  $("#previa-imagem-vazio").hidden = true;
+  linkDownload.href = enderecoImagem;
+  linkDownload.download = "vitrine-viva-instagram-whatsapp.jpg";
+  linkDownload.hidden = false;
+  botaoReajustar.hidden = false;
+}
+
 function limparImagem() {
   if (enderecoImagem) URL.revokeObjectURL(enderecoImagem);
   enderecoImagem = "";
+  imagemOriginal = null;
+  botaoReajustar.hidden = true;
+  $("#quadro-imagem").hidden = true;
   imagem.removeAttribute("src");
   imagem.hidden = true;
   linkDownload.removeAttribute("href");
@@ -172,19 +255,28 @@ botaoImagem.addEventListener("click", async () => {
       throw new Error("A resposta não trouxe uma imagem válida. Tente novamente.");
     }
     limparImagem();
-    enderecoImagem = URL.createObjectURL(arquivo);
-    imagem.src = enderecoImagem;
-    imagem.hidden = false;
-    $("#previa-imagem").src = enderecoImagem;
-    $("#previa-imagem").hidden = false;
-    $("#previa-imagem-vazio").hidden = true;
-    linkDownload.href = enderecoImagem;
-    linkDownload.download = "vitrine-viva-ia.jpg";
-    linkDownload.hidden = false;
-    definirStatus(statusImagem, "Imagem gerada por IA. Confira se combina com a oferta antes de baixar.", "sucesso");
+    imagemOriginal = arquivo;
+    await montarCriativo();
+    definirStatus(statusImagem, "Imagem gerada por IA e preparada em 1:1 com marca d'água. Confira se combina com a oferta antes de baixar.", "sucesso");
     marcarEtapa(4, [1, 2, 3]);
   } catch (erro) {
     definirStatus(statusImagem, `Não foi possível gerar a imagem: ${erro.message}`, "erro");
+  } finally {
+    ocupado = false;
+    atualizarBotoes();
+  }
+});
+
+botaoReajustar.addEventListener("click", async () => {
+  if (!imagemOriginal) return;
+  ocupado = true;
+  atualizarBotoes();
+  definirStatus(statusImagem, "Preparando o criativo quadrado...", "carregando");
+  try {
+    await montarCriativo();
+    definirStatus(statusImagem, "Criativo quadrado preparado de novo, sem gerar outra imagem.", "sucesso");
+  } catch (erro) {
+    definirStatus(statusImagem, erro.message, "erro");
   } finally {
     ocupado = false;
     atualizarBotoes();

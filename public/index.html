@@ -133,13 +133,16 @@
 
     <section class="cartao" aria-labelledby="imagem-titulo">
       <h2 id="imagem-titulo"><span class="passo">3</span> Imagem ilustrativa</h2>
-      <p class="intro">Depois de gerar os textos, crie uma imagem a partir da descrição visual sugerida.</p>
+      <p class="intro"><strong>Imagem quadrada 1:1 — adequada para post e compartilhamento em grupos.</strong> Depois de gerar os textos, crie a imagem. O recorte central e a marca d'água são feitos aqui no navegador.</p>
       <div class="acoes">
         <button id="gerar-imagem" type="button" class="primario" disabled>Gerar imagem</button>
-        <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem</a>
+        <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem quadrada</a>
+        <button id="reajustar-imagem" type="button" class="secundario" hidden>Refazer recorte e marca d'água</button>
       </div>
       <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
-      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem ilustrativa gerada por IA para a campanha" hidden>
+      <div id="quadro-imagem" class="quadro" hidden>
+        <img id="imagem-campanha" class="imagem-campanha" alt="Criativo quadrado 1:1 da campanha, gerado por IA, com marca d'água" hidden>
+      </div>
     </section>
 
     <section class="cartao" aria-labelledby="previa-titulo">
