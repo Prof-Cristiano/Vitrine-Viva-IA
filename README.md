@@ -27,9 +27,10 @@ O comando serve `public/`, encontra `functions/` na raiz e disponibiliza o bindi
 
 ## Fluxo de geração
 
-1. A página envia os dados da oferta à Function de texto, que retorna `concept`, `headline`, `caption`, `story`, `landingText` e `visualPrompt`.
+1. A página envia os dados da oferta e as preferências visuais opcionais à Function de texto, que retorna `concept`, `headline`, `caption`, `story`, `landingText` e `visualPrompt`.
 2. A chamada principal e o resumo atualizam a prévia. Os textos podem ser copiados após revisão.
-3. A página envia `visualPrompt` como `prompt` à Function de imagem e oferece o JPEG para download. Ao gerar novos textos, a imagem anterior é removida.
+3. O painel Direção de arte mostra as preferências enviadas e permite editar ou restaurar o prompt sugerido, com limite de 2048 caracteres. Para atualizar as preferências exibidas, edite o briefing e gere os textos novamente.
+4. A sugestão inclui uma orientação para evitar palavras, preços, logotipos e marcas d'água na imagem gerada. A página envia o prompt revisado à Function de imagem. A IA pode não seguir as orientações; confira o resultado. O navegador acrescenta a marca d'água do projeto ao preparar o JPEG. Ao gerar novos textos, a imagem anterior é removida.
 
 ## Cloudflare Pages
 

@@ -90,6 +90,37 @@
           </div>
         </fieldset>
 
+        <fieldset>
+          <legend>Direção visual (opcional)</legend>
+          <p class="dica">Descreva como você imagina a cena. Você poderá revisar o prompt depois.</p>
+          <div class="grade">
+            <label for="sensacao">Sensação desejada
+              <span class="dica">Exemplo: aconchego e tranquilidade.</span>
+              <input id="sensacao" name="sensacao" type="text" maxlength="500">
+            </label>
+            <label for="estiloVisual">Estilo visual
+              <span class="dica">Exemplo: fotografia natural.</span>
+              <input id="estiloVisual" name="estiloVisual" type="text" maxlength="500">
+            </label>
+            <label for="paletaCores">Paleta de cores
+              <span class="dica">Exemplo: tons quentes e terrosos.</span>
+              <input id="paletaCores" name="paletaCores" type="text" maxlength="500">
+            </label>
+            <label for="iluminacao">Iluminação
+              <span class="dica">Exemplo: luz suave de janela.</span>
+              <input id="iluminacao" name="iluminacao" type="text" maxlength="500">
+            </label>
+            <label class="larga" for="composicao">Composição e espaço livre para textos
+              <span class="dica">Exemplo: produto à esquerda e espaço livre à direita.</span>
+              <textarea id="composicao" name="composicao" rows="2" maxlength="500"></textarea>
+            </label>
+            <label class="larga" for="elementosEvitar">Elementos que a imagem deve evitar
+              <span class="dica">Exemplo: embalagens ou objetos que não fazem parte da oferta.</span>
+              <textarea id="elementosEvitar" name="elementosEvitar" rows="2" maxlength="500"></textarea>
+            </label>
+          </div>
+        </fieldset>
+
         <p id="erro-formulario" class="erro" role="alert" hidden></p>
         <div class="acoes">
           <button id="gerar-texto" type="submit" class="primario">Gerar textos da campanha</button>
@@ -134,6 +165,27 @@
     <section class="cartao" aria-labelledby="imagem-titulo">
       <h2 id="imagem-titulo"><span class="passo">3</span> Imagem ilustrativa</h2>
       <p class="intro"><strong>Imagem quadrada 1:1 — adequada para post e compartilhamento em grupos.</strong> Depois de gerar os textos, crie a imagem. O recorte central e a marca d'água são feitos aqui no navegador.</p>
+      <div id="direcao-arte" class="direcao-arte" hidden>
+        <h3>Direção de arte</h3>
+        <p class="dica">Preferências enviadas na geração dos textos. Para alterá-las, edite o briefing e gere os textos novamente.</p>
+        <dl class="direcao-lista">
+          <div><dt>Sensação desejada</dt><dd id="direcao-sensacao"></dd></div>
+          <div><dt>Estilo visual</dt><dd id="direcao-estiloVisual"></dd></div>
+          <div><dt>Paleta de cores</dt><dd id="direcao-paletaCores"></dd></div>
+          <div><dt>Iluminação</dt><dd id="direcao-iluminacao"></dd></div>
+          <div><dt>Composição e espaço livre</dt><dd id="direcao-composicao"></dd></div>
+          <div><dt>Elementos a evitar</dt><dd id="direcao-elementosEvitar"></dd></div>
+        </dl>
+        <label for="prompt-visual">Descrição visual para gerar a imagem
+          <span class="dica" id="prompt-ajuda">Revise e edite a sugestão, incluindo a orientação para evitar palavras, preços, logotipos e marcas d'água. Confira o resultado: a IA pode não seguir todas as orientações.</span>
+          <textarea id="prompt-visual" rows="6" maxlength="2048" aria-describedby="prompt-ajuda prompt-contador prompt-erro"></textarea>
+        </label>
+        <p id="prompt-contador" class="contador">0 / 2048 caracteres</p>
+        <p id="prompt-erro" class="erro" role="status" hidden></p>
+        <div class="acoes">
+          <button id="restaurar-prompt" type="button" class="secundario">Restaurar prompt sugerido</button>
+        </div>
+      </div>
       <div class="acoes">
         <button id="gerar-imagem" type="button" class="primario" disabled>Gerar imagem</button>
         <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem quadrada</a>

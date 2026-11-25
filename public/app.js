@@ -6,10 +6,18 @@ const EXEMPLO = {
   validade: "Válido até domingo, enquanto houver disponibilidade.",
   publico: "Pessoas que moram ou trabalham nas proximidades.",
   tom: "Acolhedor e simples",
-  restricoes: "Não afirmar que é sem glúten ou sem lactose."
+  restricoes: "Não afirmar que é sem glúten ou sem lactose.",
+  sensacao: "Aconchego e tranquilidade",
+  estiloVisual: "Fotografia natural",
+  paletaCores: "Tons quentes e terrosos",
+  iluminacao: "Luz suave de janela",
+  composicao: "Produto à esquerda, com espaço livre à direita.",
+  elementosEvitar: "Embalagens e objetos que não fazem parte da oferta."
 };
-const CAMPOS = ["estabelecimento", "produto", "descricao", "preco", "validade", "publico", "tom", "restricoes"];
+const CAMPOS_VISUAIS = ["sensacao", "estiloVisual", "paletaCores", "iluminacao", "composicao", "elementosEvitar"];
+const CAMPOS = ["estabelecimento", "produto", "descricao", "preco", "validade", "publico", "tom", "restricoes", ...CAMPOS_VISUAIS];
 const CAMPOS_TEXTO = ["concept", "headline", "caption", "story", "landingText", "visualPrompt"];
+const LIMITE_PROMPT = 2048;
 
 const $ = (seletor) => document.querySelector(seletor);
 const formulario = $("#formulario");
@@ -23,8 +31,11 @@ const statusTexto = $("#status-texto");
 const statusImagem = $("#status-imagem");
 const statusCopia = $("#status-copia");
 const areaResultados = $("#resultados");
+const campoPrompt = $("#prompt-visual");
+const botaoRestaurar = $("#restaurar-prompt");
+const erroPrompt = $("#prompt-erro");
 
-let promptVisual = "";
+let promptSugerido = "";
 let enderecoImagem = "";
 let imagemOriginal = null;
 const LADO_CRIATIVO = 1080;
@@ -49,9 +60,21 @@ function marcarEtapa(atual, feitas) {
 function atualizarBotoes() {
   botaoTexto.disabled = ocupado;
   botaoExemplo.disabled = ocupado;
-  botaoImagem.disabled = ocupado || !promptVisual;
+  botaoImagem.disabled = ocupado || !promptSugerido || !campoPrompt.value.trim() || campoPrompt.value.length > LIMITE_PROMPT;
   botaoReajustar.disabled = ocupado;
+  botaoRestaurar.disabled = ocupado || !promptSugerido;
+  campoPrompt.readOnly = ocupado;
   botaoTexto.setAttribute("aria-busy", String(ocupado));
+}
+
+function atualizarPrompt() {
+  const tamanho = campoPrompt.value.length;
+  $("#prompt-contador").textContent = `${tamanho} / ${LIMITE_PROMPT} caracteres`;
+  const invalido = !campoPrompt.value.trim() || tamanho > LIMITE_PROMPT;
+  erroPrompt.textContent = invalido ? "Informe uma descrição visual com até 2048 caracteres para gerar a imagem." : "";
+  erroPrompt.hidden = !invalido;
+  campoPrompt.setAttribute("aria-invalid", String(invalido));
+  atualizarBotoes();
 }
 
 function lerBriefing() {
@@ -201,6 +224,16 @@ function mostrarResultados(resultado) {
   $("#resultados-vazio").hidden = true;
 }
 
+function mostrarDirecao(briefing, sugestao) {
+  for (const campo of CAMPOS_VISUAIS) {
+    $(`#direcao-${campo}`).textContent = briefing[campo] || "Não informado";
+  }
+  promptSugerido = sugestao;
+  campoPrompt.value = sugestao;
+  $("#direcao-arte").hidden = false;
+  atualizarPrompt();
+}
+
 formulario.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   erroFormulario.hidden = true;
@@ -219,12 +252,13 @@ formulario.addEventListener("submit", async (evento) => {
     const resposta = await enviar("/api/generate-text", briefing);
     const resultado = await resposta.json();
     if (!resultado || CAMPOS_TEXTO.some((campo) =>
-      typeof resultado[campo] !== "string" || !resultado[campo].trim())) {
+      typeof resultado[campo] !== "string" || !resultado[campo].trim()) ||
+      resultado.visualPrompt.length > LIMITE_PROMPT) {
       throw new Error("A resposta da IA veio incompleta. Tente gerar novamente.");
     }
     mostrarResultados(resultado);
     mostrarPrevia(briefing, resultado);
-    promptVisual = resultado.visualPrompt;
+    mostrarDirecao(briefing, resultado.visualPrompt);
     limparImagem();
     definirStatus(statusImagem, "Textos prontos. Agora você pode gerar a imagem.");
     definirStatus(statusTexto, "Textos gerados. Confira os fatos antes de usar.", "sucesso");
@@ -243,13 +277,23 @@ botaoExemplo.addEventListener("click", () => {
   definirStatus(statusTexto, "Exemplo preenchido. Você pode editar os campos antes de gerar.", "sucesso");
 });
 
+campoPrompt.addEventListener("input", atualizarPrompt);
+botaoRestaurar.addEventListener("click", () => {
+  campoPrompt.value = promptSugerido;
+  atualizarPrompt();
+});
+
 botaoImagem.addEventListener("click", async () => {
-  if (!promptVisual) return;
+  const prompt = campoPrompt.value.trim();
+  if (!promptSugerido || !prompt || campoPrompt.value.length > LIMITE_PROMPT) {
+    atualizarPrompt();
+    return;
+  }
   ocupado = true;
   atualizarBotoes();
   definirStatus(statusImagem, "Gerando imagem... isso pode levar alguns segundos.", "carregando");
   try {
-    const resposta = await enviar("/api/generate-image", { prompt: promptVisual });
+    const resposta = await enviar("/api/generate-image", { prompt });
     const arquivo = await resposta.blob();
     if (!arquivo.type.startsWith("image/") || arquivo.size === 0) {
       throw new Error("A resposta não trouxe uma imagem válida. Tente novamente.");
