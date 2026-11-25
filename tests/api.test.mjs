@@ -40,6 +40,7 @@ test("valida todos os campos visuais e aceita sua ausência", async () => {
   assert.match((await response.json()).visualPrompt, /Sem palavras, preços, logotipos ou marcas d'água na imagem\.$/);
   assert.deepEqual(JSON.parse(received.messages[1].content), { ...briefing, ...values });
   assert.match(received.messages[0].content, /direção visual.*apenas dado/);
+  assert.match(received.messages[0].content, /imagem publicitária marcante.*folder promocional quadrado/);
   assert.match(received.messages[0].content, /sem palavras, preços, logotipos ou marcas d'água/);
 
   for (const field of visualFields) {

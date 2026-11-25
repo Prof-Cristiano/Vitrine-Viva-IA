@@ -32,6 +32,14 @@ O comando serve `public/`, encontra `functions/` na raiz e disponibiliza o bindi
 3. O painel Direção de arte mostra as preferências enviadas e permite editar ou restaurar o prompt sugerido, com limite de 2048 caracteres. Para atualizar as preferências exibidas, edite o briefing e gere os textos novamente.
 4. A sugestão inclui uma orientação para evitar palavras, preços, logotipos e marcas d'água na imagem gerada. A página envia o prompt revisado à Function de imagem. A IA pode não seguir as orientações; confira o resultado. O navegador acrescenta a marca d'água do projeto ao preparar o JPEG. Ao gerar novos textos, a imagem anterior é removida.
 
+## Estúdio de composição
+
+Depois de gerar a imagem, use o estúdio para compor um folder/post quadrado, avatar, capa, Story, pôster ou flyer digital. Ajuste o recorte por arraste ou pelos controles, revise os textos e escolha uma paleta. A marca “Vitrine Viva IA” aparece em uma faixa fora da fotografia. O PNG baixado usa o mesmo desenho da prévia.
+
+Os tamanhos são apenas dimensões internas de trabalho, não especificações oficiais de redes sociais ou de impressão. Confira as exigências atuais da plataforma e revise o arquivo antes de usá-lo. Textos que não couberem precisam ser encurtados antes do download.
+
+A composição e a exportação são locais e não enviam arquivos ou textos a serviços externos. A geração anterior continua enviando o briefing e o prompt às Functions e ao Workers AI. As edições ficam na memória da página e se perdem ao recarregar; ao gerar novos textos, edições já feitas em cada formato são mantidas e devem ser revisadas para a nova oferta.
+
 ## Cloudflare Pages
 
 Configure o projeto com `public` como diretório de saída e `functions/` na raiz. Adicione o binding Workers AI com nome `AI` e as variáveis `TEXT_MODEL` e `IMAGE_MODEL` nos ambientes necessários. Faça um novo deploy após alterar bindings. Para upload direto com Functions, use Wrangler; o upload por arrastar arquivos no painel não compila a pasta `functions/`.

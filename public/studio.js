@@ -218,24 +218,39 @@ function criarEstudio() {
     exportando = true;
     baixar.disabled = true;
     const nome = formatos[controles.formato.value].nome;
-    canvas.toBlob((arquivo) => {
+    function falharExportacao() {
       exportando = false;
-      if (!arquivo || arquivo.size === 0) {
-        status.textContent = "Não foi possível gerar o PNG. Tente novamente ou use outro navegador.";
-        status.dataset.estado = "erro";
-        baixar.disabled = false;
-        return;
-      }
-      const url = URL.createObjectURL(arquivo);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `vitrine-viva-${nome}.png`;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
       desenhar();
-      status.textContent = "Arquivo preparado para download. Confira o resultado antes de usar.";
-      status.dataset.estado = "sucesso";
-    }, "image/png");
+      status.textContent = "Não foi possível preparar o download. Tente novamente ou use outro navegador.";
+      status.dataset.estado = "erro";
+    }
+    try {
+      canvas.toBlob((arquivo) => {
+        if (!arquivo || arquivo.size === 0) {
+          falharExportacao();
+          return;
+        }
+        let url;
+        try {
+          url = URL.createObjectURL(arquivo);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `vitrine-viva-${nome}.png`;
+          link.click();
+        } catch {
+          if (url) URL.revokeObjectURL(url);
+          falharExportacao();
+          return;
+        }
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        exportando = false;
+        desenhar();
+        status.textContent = "Arquivo preparado para download. Confira o resultado antes de usar.";
+        status.dataset.estado = "sucesso";
+      }, "image/png");
+    } catch {
+      falharExportacao();
+    }
   });
 
   return {
