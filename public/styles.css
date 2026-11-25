@@ -1,8 +1,9 @@
 :root {
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: #2d211b;
   background: #faf6ef;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-size: 18px;
 }
 
 * { box-sizing: border-box; }
@@ -10,25 +11,38 @@
 body { margin: 0; }
 
 .container {
-  width: min(100% - 2rem, 760px);
+  width: min(100% - 2rem, 820px);
   margin: 0 auto;
 }
 
 .cabecalho {
-  padding: 2rem 0;
+  padding: 2rem 0 1.5rem;
   color: #fffaf3;
-  background: #583726;
+  background: linear-gradient(135deg, #583726, #8a4c24);
 }
 
-h1, h2, h3 { line-height: 1.2; }
+h1, h2, h3, h4 { line-height: 1.25; }
 
-h1 { margin: 0.3rem 0; }
+h1 { margin: 0.3rem 0; font-size: 2rem; }
+
+.subtitulo { margin: 0 0 1rem; font-size: 1.1rem; }
 
 .etiqueta {
-  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.aviso-ia {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  color: #583726;
+  background: #ffe7b8;
+  border-radius: 0.5rem;
+  font-weight: 700;
 }
 
 .cartao {
@@ -39,9 +53,48 @@ h1 { margin: 0.3rem 0; }
   border-radius: 0.75rem;
 }
 
-.cartao h2 { margin-top: 0; }
+.cartao h2 { margin-top: 0; font-size: 1.35rem; }
 
-.aviso, .nota { color: #654b3a; }
+.passo {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 0.4rem;
+  color: #fff;
+  background: #70432b;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.larga { grid-column: 1 / -1; }
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #b9a290;
+  border-radius: 0.4rem;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+  background: #fffdf9;
+}
+
+textarea { resize: vertical; }
 
 .acoes {
   display: flex;
@@ -51,13 +104,15 @@ h1 { margin: 0.3rem 0; }
 
 button, .botao {
   display: inline-block;
-  padding: 0.65rem 1rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.1rem;
   border: 1px solid #70432b;
   border-radius: 0.4rem;
   color: #fff;
   background: #70432b;
   font: inherit;
   font-weight: 600;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
 }
@@ -67,9 +122,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button:focus-visible, .botao:focus-visible {
+button:focus-visible, .botao:focus-visible, input:focus-visible, textarea:focus-visible {
   outline: 3px solid #e28d2f;
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 .secundario {
@@ -77,15 +132,31 @@ button:focus-visible, .botao:focus-visible {
   background: #fff;
 }
 
+.status { margin: 0.75rem 0 0; color: #4b3629; }
 .status:empty { display: none; }
 
+.erro {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.9rem;
+  color: #7a1f1f;
+  background: #fde8e8;
+  border-radius: 0.4rem;
+}
+
+.resultados { display: grid; gap: 1rem; margin-top: 1rem; }
+
 .resultado {
-  margin-top: 1rem;
   padding: 1rem;
+  background: #faf6ef;
+  border-radius: 0.5rem;
+}
+
+.resultado h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+
+.texto {
+  margin: 0 0 0.75rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  background: #faf6ef;
-  border-radius: 0.4rem;
 }
 
 .imagem-campanha {
@@ -93,7 +164,7 @@ button:focus-visible, .botao:focus-visible {
   max-width: 100%;
   max-height: 480px;
   margin-top: 1rem;
-  border-radius: 0.4rem;
+  border-radius: 0.5rem;
 }
 
 [hidden] { display: none !important; }
@@ -104,6 +175,25 @@ button:focus-visible, .botao:focus-visible {
   border-radius: 0.6rem;
 }
 
+.previa h3 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+.previa h4 { margin: 0.75rem 0 0.25rem; font-size: 1.15rem; }
+
+.oferta {
+  display: inline-block;
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  background: #fff;
+  border-radius: 0.4rem;
+  font-weight: 700;
+}
+
 .cta { background: #8a4c24; }
-.nota, .rodape { font-size: 0.9rem; }
-.rodape { padding: 0.5rem 0 2rem; }
+.nota { color: #654b3a; font-size: 0.9rem; }
+.rodape { padding: 0.5rem 0 2rem; font-size: 0.9rem; color: #4b3629; }
+
+@media (max-width: 600px) {
+  :root { font-size: 17px; }
+  .grade { grid-template-columns: 1fr; }
+  .cartao { padding: 1.1rem; }
+  .acoes > button, .acoes > .botao { width: 100%; }
+}

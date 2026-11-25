@@ -10,54 +10,115 @@
 <body>
   <header class="cabecalho">
     <div class="container">
-      <p class="etiqueta">Aula prática de marketing digital</p>
+      <p class="etiqueta">Atividade guiada de marketing digital</p>
       <h1>Vitrine Viva IA</h1>
-      <p>Experimente criar uma campanha para um negócio fictício.</p>
+      <p class="subtitulo">Transforme um briefing em uma campanha pronta para revisar</p>
+      <p class="aviso-ia" role="note">A IA sugere; você confere os fatos antes de usar</p>
     </div>
   </header>
 
   <main class="container">
-    <section class="cartao" aria-labelledby="caso-titulo">
-      <h2 id="caso-titulo">Caso da aula: Café Ipê</h2>
-      <p>Bolo de laranja vendido em fatias por <strong>R$ 12</strong>.</p>
-      <p>Oferta fictícia válida até domingo, enquanto houver disponibilidade.</p>
-      <p class="aviso">Esta é uma atividade demonstrativa. Revise todo conteúdo gerado antes de usá-lo.</p>
+    <section class="cartao" aria-labelledby="briefing-titulo">
+      <h2 id="briefing-titulo"><span class="passo">1</span> Conte sobre a oferta</h2>
+      <p>Preencha o briefing ou use o exemplo. Campos com * são obrigatórios.</p>
+      <form id="formulario" novalidate>
+        <div class="acoes">
+          <button id="usar-exemplo" type="button" class="secundario">Usar exemplo Café Ipê</button>
+        </div>
+        <div class="grade">
+          <label>Nome do negócio *
+            <input id="estabelecimento" name="estabelecimento" type="text" maxlength="200" required autocomplete="off">
+          </label>
+          <label>Produto *
+            <input id="produto" name="produto" type="text" maxlength="200" required autocomplete="off">
+          </label>
+          <label class="larga">Descrição do produto
+            <textarea id="descricao" name="descricao" rows="3" maxlength="2000"></textarea>
+          </label>
+          <label>Preço
+            <input id="preco" name="preco" type="text" maxlength="200" autocomplete="off">
+          </label>
+          <label>Validade
+            <input id="validade" name="validade" type="text" maxlength="500" autocomplete="off">
+          </label>
+          <label class="larga">Público
+            <input id="publico" name="publico" type="text" maxlength="500" autocomplete="off">
+          </label>
+          <label>Tom de voz
+            <input id="tom" name="tom" type="text" maxlength="200" autocomplete="off">
+          </label>
+          <label class="larga">Restrições (o que a IA não deve afirmar)
+            <textarea id="restricoes" name="restricoes" rows="2" maxlength="2000"></textarea>
+          </label>
+        </div>
+        <p id="erro-formulario" class="erro" role="alert" hidden></p>
+        <div class="acoes">
+          <button id="gerar-texto" type="submit">Gerar textos da campanha</button>
+        </div>
+        <p id="status-texto" class="status" role="status" aria-live="polite"></p>
+      </form>
     </section>
 
-    <section class="cartao" aria-labelledby="textos-titulo">
-      <h2 id="textos-titulo">Textos da campanha</h2>
-      <p>Gere uma sugestão de texto e copie para sua atividade.</p>
-      <div class="acoes">
-        <button id="gerar-texto" type="button">Gerar textos</button>
-        <button id="copiar-texto" type="button" class="secundario" disabled>Copiar texto</button>
+    <section class="cartao" aria-labelledby="resultados-titulo">
+      <h2 id="resultados-titulo"><span class="passo">2</span> Textos sugeridos</h2>
+      <p id="resultados-vazio" class="nota">Os textos aparecerão aqui depois que você gerar a campanha.</p>
+      <div id="resultados" class="resultados" hidden>
+        <article class="resultado" data-campo="concept">
+          <h3>Conceito da campanha</h3>
+          <p class="texto"></p>
+          <button type="button" class="secundario copiar">Copiar</button>
+        </article>
+        <article class="resultado" data-campo="headline">
+          <h3>Chamada principal</h3>
+          <p class="texto"></p>
+          <button type="button" class="secundario copiar">Copiar</button>
+        </article>
+        <article class="resultado" data-campo="caption">
+          <h3>Legenda para redes sociais</h3>
+          <p class="texto"></p>
+          <button type="button" class="secundario copiar">Copiar</button>
+        </article>
+        <article class="resultado" data-campo="story">
+          <h3>Texto curto para story</h3>
+          <p class="texto"></p>
+          <button type="button" class="secundario copiar">Copiar</button>
+        </article>
+        <article class="resultado" data-campo="landingText">
+          <h3>Texto para a landing page</h3>
+          <p class="texto"></p>
+          <button type="button" class="secundario copiar">Copiar</button>
+        </article>
       </div>
-      <p id="status-texto" class="status" role="status" aria-live="polite"></p>
-      <div id="texto-campanha" class="resultado" hidden></div>
+      <p id="status-copia" class="status" role="status" aria-live="polite"></p>
     </section>
 
     <section class="cartao" aria-labelledby="imagem-titulo">
-      <h2 id="imagem-titulo">Imagem da campanha</h2>
-      <p>Primeiro gere os textos. Depois, crie uma imagem a partir da descrição visual da campanha.</p>
+      <h2 id="imagem-titulo"><span class="passo">3</span> Imagem ilustrativa</h2>
+      <p>Depois de gerar os textos, crie uma imagem a partir da descrição visual sugerida.</p>
       <div class="acoes">
         <button id="gerar-imagem" type="button" disabled>Gerar imagem</button>
         <a id="baixar-imagem" class="botao secundario" hidden>Baixar imagem</a>
       </div>
       <p id="status-imagem" class="status" role="status" aria-live="polite"></p>
-      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem gerada para a campanha fictícia do Café Ipê" hidden>
+      <img id="imagem-campanha" class="imagem-campanha" alt="Imagem ilustrativa gerada por IA para a campanha" hidden>
     </section>
 
     <section class="cartao" aria-labelledby="previa-titulo">
-      <h2 id="previa-titulo">Prévia da landing page</h2>
+      <h2 id="previa-titulo"><span class="passo">4</span> Prévia da landing page</h2>
       <div class="previa">
-        <p class="etiqueta">Oferta fictícia • Café Ipê</p>
-        <h3 id="landing-titulo">Uma fatia de bolo de laranja para alegrar seu dia</h3>
-        <p id="landing-descricao">Experimente uma fatia por R$ 12. Oferta válida até domingo, enquanto houver disponibilidade.</p>
-        <button type="button" class="cta" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
+        <p class="etiqueta" id="previa-negocio">Oferta fictícia</p>
+        <h3 id="previa-produto">Seu produto aparecerá aqui</h3>
+        <p class="oferta" id="previa-oferta" hidden></p>
+        <h4 id="previa-chamada" hidden></h4>
+        <p id="previa-texto">Gere os textos para ver a prévia.</p>
+        <button type="button" class="cta" id="cta-demo" aria-describedby="cta-aviso">Ver detalhes da oferta fictícia</button>
         <p id="cta-aviso" class="nota">Botão demonstrativo: não abre contatos nem páginas externas.</p>
       </div>
     </section>
   </main>
 
-  <footer class="container rodape">Vitrine Viva IA • Projeto didático fictício</footer>
+  <footer class="container rodape">
+    Projeto didático. O Café Ipê e a oferta são fictícios. Revise todos os dados antes de usar qualquer conteúdo.
+  </footer>
 </body>
 </html>
